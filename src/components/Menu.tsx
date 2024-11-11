@@ -90,6 +90,12 @@ const menuItems = [
         href: "/list/announcements",
         visible: ["admin", "teacher", "student", "parent"],
       },
+      {
+        icon: "/calendar-days.png",
+        label: "Calendar",
+        href:"/calendar",
+        visible: ["admin"],
+      },
     ],
   },
   {
