@@ -8,7 +8,9 @@ import Image from "next/image";
 type Subject = {
   id: number;
   name: string;
-  teachers: string[];
+  grade: string;
+  teacher: string;
+  noStudents: number;
 };
 
 const columns = [
@@ -17,8 +19,18 @@ const columns = [
     accessor: "name",
   },
   {
-    header: "Teachers",
-    accessor: "teachers",
+    header: "Grade",
+    accessor: "grade",
+    className: "hidden md:table-cell",
+  },
+  {
+    header: "Teacher",
+    accessor: "teacher",
+    className: "hidden md:table-cell",
+  },
+  {
+    header: "No. Student",
+    accessor: "noStudents",
     className: "hidden md:table-cell",
   },
   {
@@ -34,7 +46,9 @@ const SubjectListPage = () => {
       className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight"
     >
       <td className="flex items-center gap-4 p-4">{item.name}</td>
-      <td className="hidden md:table-cell">{item.teachers.join(",")}</td>
+      <td className="hidden md:table-cell">{item.grade}</td>
+      <td className="hidden md:table-cell">{item.teacher}</td>
+      <td className="hidden md:table-cell">{item.noStudents}</td>
       <td>
         <div className="flex items-center gap-2">
           {role === "admin" && (

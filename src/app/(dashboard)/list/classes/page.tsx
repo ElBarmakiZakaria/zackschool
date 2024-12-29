@@ -10,6 +10,7 @@ type Class = {
   name: string;
   capacity: number;
   grade: number;
+  subject:string;
   supervisor: string;
 };
 
@@ -26,6 +27,11 @@ const columns = [
   {
     header: "Grade",
     accessor: "grade",
+    className: "hidden md:table-cell",
+  },
+  {
+    header: "Subject",
+    accessor: "subject",
     className: "hidden md:table-cell",
   },
   {
@@ -48,6 +54,7 @@ const ClassListPage = () => {
       <td className="flex items-center gap-4 p-4">{item.name}</td>
       <td className="hidden md:table-cell">{item.capacity}</td>
       <td className="hidden md:table-cell">{item.grade}</td>
+      <td className="hidden md:table-cell">{item.subject}</td>
       <td className="hidden md:table-cell">{item.supervisor}</td>
       <td>
         <div className="flex items-center gap-2">

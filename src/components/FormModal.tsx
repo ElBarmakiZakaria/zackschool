@@ -1,5 +1,6 @@
 "use client"
 
+import { Delete, Trash2 } from "lucide-react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useState } from "react";
@@ -12,12 +13,20 @@ const TeacherForm = dynamic(() => import("./forms/TeacherForm"),{
 const StudentForm = dynamic(()=>import("./forms/StudentForm"),{
     loading: () => <h1>Loading...</h1>,
 });
+const ParentForm = dynamic(()=>import("./forms/ParentForm"),{
+    loading: () => <h1>Loading...</h1>,
+});
+const PaymentForm = dynamic(()=>import("./forms/paymentForm"),{
+    loading: () => <h1>Loading...</h1>,
+});
 
 const forms:{
     [key:string]:(type:"create" | "update", data?:any ) => JSX.Element;
 } = {
     teacher: (type, data) => <TeacherForm type={type} data={data} />,
     student: (type, data) => <StudentForm type={type} data={data} />,
+    parent: (type, data) => <ParentForm type={type} data={data} />,
+
 }
 
 
@@ -26,6 +35,7 @@ const FormModal = ({table,type,data,id}:{
     | "teacher"
     | "student"
     | "parent"
+    | "paymentstudent"
     | "subject"
     | "class"
     | "lesson"
@@ -41,11 +51,12 @@ const FormModal = ({table,type,data,id}:{
 }) => {
 
     const size = type === "create" ? "w-8 h-8" : "w-7 h-7";
+    
     const bgColor = 
         type === "create" 
-        ? "bg-lamaYellow"
-        : type === "update"
         ? "bg-lamaSky"
+        : type === "update"
+        ? "bg-lamaYellow"
         : "bg-lamaPurple";
     
     const [open, setOpen] = useState(false);
@@ -67,7 +78,11 @@ const FormModal = ({table,type,data,id}:{
         <button className={`${size} flex items-center justify-center rounded-full ${bgColor}`}
             onClick={()=>setOpen(true)}
         >
-            <Image src={`/${type}.png`} alt="" width={16} height={16}/>
+            {type === "delete" ? (<Trash2 width={16} height={16} color="white"/>)
+             :(
+                <Image src={`/${type}.png`} alt="" width={16} height={16}/>
+            )}
+            
         </button>
 
         {open && (

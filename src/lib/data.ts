@@ -5,138 +5,89 @@ export let role = "admin";
 export const teachersData = [
   {
     id: 1,
-    teacherId: "1234567890",
     name: "John Doe",
     email: "john@doe.com",
-    photo:
-      "https://images.pexels.com/photos/2888150/pexels-photo-2888150.jpeg?auto=compress&cs=tinysrgb&w=1200",
     phone: "1234567890",
     subjects: ["Math", "Geometry"],
     classes: ["1B", "2A", "3C"],
-    address: "123 Main St, Anytown, USA",
+    active: true,
   },
   {
     id: 2,
-    teacherId: "1234567890",
     name: "Jane Doe",
     email: "jane@doe.com",
-    photo:
-      "https://images.pexels.com/photos/936126/pexels-photo-936126.jpeg?auto=compress&cs=tinysrgb&w=1200",
     phone: "1234567890",
     subjects: ["Physics", "Chemistry"],
     classes: ["5A", "4B", "3C"],
-    address: "123 Main St, Anytown, USA",
+    active: true,
   },
   {
     id: 3,
-    teacherId: "1234567890",
     name: "Mike Geller",
     email: "mike@geller.com",
-    photo:
-      "https://images.pexels.com/photos/428328/pexels-photo-428328.jpeg?auto=compress&cs=tinysrgb&w=1200",
     phone: "1234567890",
     subjects: ["Biology"],
     classes: ["5A", "4B", "3C"],
-    address: "123 Main St, Anytown, USA",
+    active: true,
   },
   {
     id: 4,
-    teacherId: "1234567890",
     name: "Jay French",
     email: "jay@gmail.com",
-    photo:
-      "https://images.pexels.com/photos/1187765/pexels-photo-1187765.jpeg?auto=compress&cs=tinysrgb&w=1200",
     phone: "1234567890",
     subjects: ["History"],
     classes: ["5A", "4B", "3C"],
-    address: "123 Main St, Anytown, USA",
+    active: false,
   },
   {
     id: 5,
-    teacherId: "1234567890",
     name: "Jane Smith",
     email: "jane@gmail.com",
-    photo:
-      "https://images.pexels.com/photos/1102341/pexels-photo-1102341.jpeg?auto=compress&cs=tinysrgb&w=1200",
     phone: "1234567890",
     subjects: ["Music", "History"],
     classes: ["5A", "4B", "3C"],
-    address: "123 Main St, Anytown, USA",
+    active: true,
   },
   {
     id: 6,
-    teacherId: "1234567890",
     name: "Anna Santiago",
     email: "anna@gmail.com",
-    photo:
-      "https://images.pexels.com/photos/712513/pexels-photo-712513.jpeg?auto=compress&cs=tinysrgb&w=1200",
     phone: "1234567890",
     subjects: ["Physics"],
     classes: ["5A", "4B", "3C"],
-    address: "123 Main St, Anytown, USA",
+    active: false,
   },
   {
     id: 7,
-    teacherId: "1234567890",
     name: "Allen Black",
     email: "allen@black.com",
-    photo:
-      "https://images.pexels.com/photos/1438081/pexels-photo-1438081.jpeg?auto=compress&cs=tinysrgb&w=1200",
     phone: "1234567890",
     subjects: ["English", "Spanish"],
     classes: ["5A", "4B", "3C"],
-    address: "123 Main St, Anytown, USA",
+    active: true,
   },
   {
     id: 8,
-    teacherId: "1234567890",
     name: "Ophelia Castro",
     email: "ophelia@castro.com",
-    photo:
-      "https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=1200",
     phone: "1234567890",
     subjects: ["Math", "Geometry"],
     classes: ["5A", "4B", "3C"],
-    address: "123 Main St, Anytown, USA",
+    active: true,
   },
-  {
-    id: 9,
-    teacherId: "1234567890",
-    name: "Derek Briggs",
-    email: "derek@briggs.com",
-    photo:
-      "https://images.pexels.com/photos/842980/pexels-photo-842980.jpeg?auto=compress&cs=tinysrgb&w=1200",
-    phone: "1234567890",
-    subjects: ["Literature", "English"],
-    classes: ["5A", "4B", "3C"],
-    address: "123 Main St, Anytown, USA",
-  },
-  {
-    id: 10,
-    teacherId: "1234567890",
-    name: "John Glover",
-    email: "john@glover.com",
-    photo:
-      "https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg?auto=compress&cs=tinysrgb&w=1200",
-    phone: "1234567890",
-    subjects: ["Biology"],
-    classes: ["5A", "4B", "3C"],
-    address: "123 Main St, Anytown, USA",
-  },
+
 ];
 
 export const studentsData = [
   {
     id: 1,
-    studentId: "1234567890",
     name: "John Doe",
     email: "john@doe.com",
-    photo:
-      "https://images.pexels.com/photos/2888150/pexels-photo-2888150.jpeg?auto=compress&cs=tinysrgb&w=1200",
     phone: "1234567890",
     grade: 5,
-    class: "1B",
-    address: "123 Main St, Anytown, USA",
+    subjects: ["math", "physics"],
+    startDate: "2024-43-09",
+    status: true,
   },
   {
     id: 2,
@@ -147,8 +98,9 @@ export const studentsData = [
       "https://images.pexels.com/photos/936126/pexels-photo-936126.jpeg?auto=compress&cs=tinysrgb&w=1200",
     phone: "1234567890",
     grade: 5,
-    class: "5A",
-    address: "123 Main St, Anytown, USA",
+    subjects: ["math", "eng"],
+    startDate: "2024-43-09",
+    status: false,
   },
   {
     id: 3,
@@ -159,8 +111,9 @@ export const studentsData = [
       "https://images.pexels.com/photos/428328/pexels-photo-428328.jpeg?auto=compress&cs=tinysrgb&w=1200",
     phone: "1234567890",
     grade: 5,
-    class: "5A",
-    address: "123 Main St, Anytown, USA",
+    subjects: ["math", "physics"],
+    startDate: "2024-43-09",
+    status: false,
   },
   {
     id: 4,
@@ -171,8 +124,9 @@ export const studentsData = [
       "https://images.pexels.com/photos/1187765/pexels-photo-1187765.jpeg?auto=compress&cs=tinysrgb&w=1200",
     phone: "1234567890",
     grade: 5,
-    class: "5A",
-    address: "123 Main St, Anytown, USA",
+    subjects: ["math", "physics"],
+    startDate: "2024-43-09",
+    status: true,
   },
   {
     id: 5,
@@ -183,8 +137,9 @@ export const studentsData = [
       "https://images.pexels.com/photos/1102341/pexels-photo-1102341.jpeg?auto=compress&cs=tinysrgb&w=1200",
     phone: "1234567890",
     grade: 5,
-    class: "5A",
-    address: "123 Main St, Anytown, USA",
+    subjects: ["math", "physics"],
+    startDate: "2024-43-09",
+    status: true,
   },
   {
     id: 6,
@@ -195,8 +150,9 @@ export const studentsData = [
       "https://images.pexels.com/photos/712513/pexels-photo-712513.jpeg?auto=compress&cs=tinysrgb&w=1200",
     phone: "1234567890",
     grade: 5,
-    class: "5A",
-    address: "123 Main St, Anytown, USA",
+    subjects: ["math", "physics"],
+    startDate: "2024-43-09",
+    status: true,
   },
   {
     id: 7,
@@ -207,8 +163,9 @@ export const studentsData = [
       "https://images.pexels.com/photos/1438081/pexels-photo-1438081.jpeg?auto=compress&cs=tinysrgb&w=1200",
     phone: "1234567890",
     grade: 5,
-    class: "5A",
-    address: "123 Main St, Anytown, USA",
+    subjects: ["math", "physics"],
+    startDate: "2024-43-09",
+    status: true,
   },
   {
     id: 8,
@@ -218,9 +175,10 @@ export const studentsData = [
     photo:
       "https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=1200",
     phone: "1234567890",
-    grade: 5,
-    class: "5A",
-    address: "123 Main St, Anytown, USA",
+    grade: 4,
+    subjects: ["math", "physics"],
+    startDate: "2024-43-09",
+    status: false,
   },
   {
     id: 9,
@@ -231,8 +189,9 @@ export const studentsData = [
       "https://images.pexels.com/photos/842980/pexels-photo-842980.jpeg?auto=compress&cs=tinysrgb&w=1200",
     phone: "1234567890",
     grade: 5,
-    class: "5A",
-    address: "123 Main St, Anytown, USA",
+    subjects: ["math", "physics"],
+    startDate: "2024-43-09",
+    status: true,
   },
   {
     id: 10,
@@ -243,9 +202,42 @@ export const studentsData = [
       "https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg?auto=compress&cs=tinysrgb&w=1200",
     phone: "1234567890",
     grade: 5,
-    class: "5A",
-    address: "123 Main St, Anytown, USA",
+    subjects: ["math", "frc"],
+    startDate: "2024-43-09",
+    status: false,
   },
+];
+
+
+export const paymentData = [
+  {
+    id:1,
+    studentId:"madam",
+    paymentDate:"2024-12-14",
+    month:"december",
+    amountPaid:"200",
+    dueAmount:"200",
+    status:"Paid",
+  },
+  {
+    id:2,
+    studentId:"madam",
+    paymentDate:"2025-01-14",
+    month:"january",
+    amountPaid:"200",
+    dueAmount:"300",
+    status:"Unsattled",
+  },
+  {
+    id:3,
+    studentId:"madam",
+    paymentDate:"---",
+    month:"Febuary",
+    amountPaid:"---",
+    dueAmount:"200",
+    status:"---",
+  },
+  
 ];
 
 export const parentsData = [
@@ -335,52 +327,89 @@ export const subjectsData = [
   {
     id: 1,
     name: "Math",
-    teachers: ["Alice Phelps", "Russell Davidson"],
+    grade: "1",
+    teacher: "Alice Phelps",
+    noStudents: 12,
   },
   {
     id: 2,
     name: "English",
-    teachers: ["Manuel Becker", "Eddie Chavez"],
+    grade: "2",
+    teacher: "Alice Phelps",
+    noStudents: 1,
   },
   {
     id: 3,
     name: "Physics",
-    teachers: ["Lola Newman", "Darrell Delgado"],
+    grade: "3",
+    teacher: "Alice Phelps",
+    noStudents: 7,
   },
   {
     id: 4,
     name: "Chemistry",
-    teachers: ["Nathan Kelly", "Benjamin Snyder"],
+    grade: "4",
+    teacher: "Alice Phelps",
+    noStudents: 2,
   },
   {
     id: 5,
     name: "Biology",
-    teachers: ["Alma Benson", "Lina Collier"],
+    grade: "5",
+    teacher: "Alice Phelps",
+    noStudents: 12,
   },
   {
     id: 6,
     name: "History",
-    teachers: ["Hannah Bowman", "Betty Obrien"],
+    grade: "6",
+    teacher: "Alice Phelps",
+    noStudents: 12,
   },
   {
     id: 7,
     name: "Geography",
-    teachers: ["Lora French", "Sue Brady"],
+    grade: "4",
+    teacher: "Alice Phelps",
+    noStudents: 12,
   },
   {
     id: 8,
     name: "Art",
-    teachers: ["Harriet Alvarado", "Mayme Keller"],
+    grade: "1",
+    teacher: "Alice Phelps",
+    noStudents: 12,
   },
   {
     id: 9,
     name: "Music",
-    teachers: ["Gertrude Roy", "Rosa Singleton"],
+    grade: "1",
+    teacher: "Alice Phelps",
+    noStudents: 12,
   },
   {
     id: 10,
     name: "Literature",
-    teachers: ["Effie Lynch", "Brett Flowers"],
+    grade: "1",
+    teacher: "Alice Phelps",
+    noStudents: 11,
+  },
+];
+
+export const subjectDatePerStudent = [
+  {
+    id: 1,
+    subject: "Math",
+    enrolmentDate: "2024-23-31",
+    price: "200.00MAD",
+    teacher: "Simo Molaha",
+  },
+  {
+    id: 2,
+    subject: "English",
+    enrolmentDate: "2024-05-31",
+    price: "250.00MAD",
+    teacher: "Simo Maliha",
   },
 ];
 
@@ -390,6 +419,7 @@ export const classesData = [
     name: "1A",
     capacity: 20,
     grade: 1,
+    subject: "Math",
     supervisor: "Joseph Padilla",
   },
   {
@@ -397,6 +427,7 @@ export const classesData = [
     name: "2B",
     capacity: 22,
     grade: 2,
+    subject: "Physics",
     supervisor: "Blake Joseph",
   },
   {
@@ -404,6 +435,7 @@ export const classesData = [
     name: "3C",
     capacity: 20,
     grade: 3,
+    subject: "Biology",
     supervisor: "Tom Bennett",
   },
   {
@@ -411,6 +443,7 @@ export const classesData = [
     name: "4B",
     capacity: 18,
     grade: 4,
+    subject: "Math",
     supervisor: "Aaron Collins",
   },
   {
@@ -418,6 +451,7 @@ export const classesData = [
     name: "5A",
     capacity: 16,
     grade: 5,
+    subject: "English",
     supervisor: "Iva Frank",
   },
   {
@@ -425,6 +459,7 @@ export const classesData = [
     name: "5B",
     capacity: 20,
     grade: 5,
+    subject: "Math",
     supervisor: "Leila Santos",
   },
   {
@@ -432,6 +467,7 @@ export const classesData = [
     name: "7A",
     capacity: 18,
     grade: 7,
+    subject: "Math",
     supervisor: "Carrie Walton",
   },
   {
@@ -439,6 +475,7 @@ export const classesData = [
     name: "6B",
     capacity: 22,
     grade: 6,
+    subject: "Math",
     supervisor: "Christopher Butler",
   },
   {
@@ -446,6 +483,7 @@ export const classesData = [
     name: "6C",
     capacity: 18,
     grade: 6,
+    subject: "Math",
     supervisor: "Marc Miller",
   },
   {
@@ -453,6 +491,7 @@ export const classesData = [
     name: "6D",
     capacity: 20,
     grade: 6,
+    subject: "Math",
     supervisor: "Ophelia Marsh",
   },
 ];
