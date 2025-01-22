@@ -1,30 +1,10 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import Image from "next/image";
 import { useForm } from "react-hook-form";
-
-import { z } from "zod";
 import InputField from "../InputField";
+import { parentSchema, ParentSchema } from "@/lib/formValidationSchema";
 
-
-const schema = z.object({
-    username: z
-      .string()
-      .min(3, { message: "Username must be at least 3 characters long!" })
-      .max(20, { message: "Username must be at most 20 characters long!" }),
-    email: z.string().email({ message: "Invalid email address!" }),
-    password: z
-      .string()
-      .min(8, { message: "Password must be at least 8 characters long!" }),
-    firstName: z.string().min(1, { message: "First name is required!" }),
-    lastName: z.string().min(1, { message: "Last name is required!" }),
-    phone: z.string().min(1, { message: "Phone is required!" }),
-    address: z.string().min(1, { message: "Address is required!" }),
-    child: z.string().min(1, { message: "It needs to be at least one kid!" }),
-  });
-
-type Inputs = z.infer<typeof schema>;
 
 const ParentForm = ({
     type,
@@ -39,8 +19,8 @@ const ParentForm = ({
         register,
         handleSubmit,
         formState: { errors },
-      } = useForm<Inputs>({
-        resolver: zodResolver(schema),
+      } = useForm<ParentSchema>({
+        resolver: zodResolver(parentSchema),
       });
     
       const onSubmit = handleSubmit((data) => {
@@ -50,9 +30,9 @@ const ParentForm = ({
   return (
 <form className="flex flex-col gap-8" onSubmit={onSubmit}>
     {type === "create" ?(
-        <h1 className="text-xl font-semibold">Create a new student</h1>
+        <h1 className="text-xl font-semibold">Create a new parent</h1>
       ) : (
-        <h1 className="text-xl font-semibold">update student information</h1>
+        <h1 className="text-xl font-semibold">update parent information</h1>
       )}
       
       <span className="text-xs text-gray-400 font-medium">
@@ -73,14 +53,6 @@ const ParentForm = ({
           register={register}
           error={errors?.email}
         />
-        <InputField
-          label="Password"
-          name="password"
-          type="password"
-          defaultValue={data?.password}
-          register={register}
-          error={errors?.password}
-        />
       </div>
       <span className="text-xs text-gray-400 font-medium">
         Personal Information
@@ -89,35 +61,28 @@ const ParentForm = ({
         <InputField
           label="First Name"
           name="firstName"
-          defaultValue={data?.firstName}
+          defaultValue={data?.first_name}
           register={register}
           error={errors.firstName}
         />
         <InputField
           label="Last Name"
           name="lastName"
-          defaultValue={data?.lastName}
+          defaultValue={data?.surname}
           register={register}
           error={errors.lastName}
         />
         <InputField
           label="Phone"
           name="phone"
-          defaultValue={data?.phone}
+          defaultValue={data?.phone_number}
           register={register}
           error={errors.phone}
         />
         <InputField
-          label="Address"
-          name="address"
-          defaultValue={data?.address}
-          register={register}
-          error={errors.address}
-        />
-        <InputField
           label="child"
           name="child"
-          defaultValue={data?.child}
+          defaultValue={data?.StudentParent?.student_id}
           register={register}
           error={errors.child}
         />
