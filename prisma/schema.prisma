@@ -13,114 +13,120 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Admin {
-  id       String @id
-  username String @unique
+enum UserSex {
+  MALE
+  FEMALE
 }
 
 model Grades {
   grade_id String @id
-  Students Students[]
+  Students Students[] @relation(name: "studentTograde")
+  Subjects Subjects[] @relation(name: "subjectTograde")
 }
 
-model Parents {
-  parent_id Int @id @default(autoincrement())
-  username String @unique
-  first_name String 
-  surname String 
-  email String? @unique
-  phone_number String? 
-  StudentParent StudentParent[]
+model Subjects {
+  subject_id String @id @default(cuid())
+  subject_name String 
+  price Decimal @db.Decimal(5, 2)
+  grade_id String
+  teacher_portion Decimal @db.Decimal(5, 2)
+
+  Grades Grades @relation(name: "subjectTograde", fields: [grade_id], references: [grade_id], onDelete: NoAction, onUpdate: Cascade)
+  StudentSubjects StudentSubjects[] @relation(name: "StudentSubjectsTosubject")
+  TeacherSubjects TeacherSubjects[] @relation(name: "teachersubjectsTosubject")
+  StudentPayments StudentPayments[] @relation(name: "studentpaymentsTosubject")
+  TeacherPayments TeacherPayments[] @relation(name: "teacherpaymentsTosubject")
 }
 
 model Students {
-  student_id Int @id @default(autoincrement())
+  student_id String @id @default(cuid())
   username String @unique
   first_name String 
   last_name String 
   email String? @unique
-  phone_number String 
+  phone_number String?
+  profile_img String?
   sex UserSex
   grade_id String 
   enrolment_date DateTime
   status Boolean
-  grade Grades @relation(fields: [grade_id], references: [grade_id])
-  StudentParent StudentParent[]
-  Payments Payment[]
-  Attendance Attendance[]
-  StudentSubject StudentSubject[]
+
+  Grades Grades @relation(name: "studentTograde", fields: [grade_id], references: [grade_id], onDelete: NoAction, onUpdate: Cascade)
+  StudentSubjects StudentSubjects[] @relation(name: "StudentSubjectsTostudent")
+  StudentPayments StudentPayments[] @relation(name: "studentpaymentsTostudent")
 }
 
-model StudentParent {
-  id Int @id @default(autoincrement())
-  student_id Int
-  parent_id Int
 
-  student Students @relation(fields: [student_id], references: [student_id])
-  parent Parents @relation(fields: [parent_id], references: [parent_id])
-
-}
 model Teachers {
-  teacher_id Int @id @default(autoincrement())
+  teacher_id String @id @default(cuid())
   username String @unique 
   email String? @unique
   first_name String
   surname String
   phone_number String @unique
+  profile_img String?
   status Boolean
-  Subjects Subjects[]
-  TeacherCommissions TeacherCommission[]
+
+  TeacherSubjects TeacherSubjects[] @relation(name: "teachersubjectsToteacher")
+  TeacherPayments TeacherPayments[] @relation(name: "teacherpaymentsToteacher")
 }
 
-model Subjects {
-  subject_id Int @id 
-  subject_name String @unique 
-  price Decimal @db.Decimal(5, 2)
-  teacher_id Int?
-  Teacher Teachers? @relation(fields: [teacher_id], references: [teacher_id])
-  
 
-}
-
-model StudentSubject {
-  id Int @id @default(autoincrement())
-  subject_id Int
-  student_id Int
+model StudentSubjects {
+  subject_id String
+  student_id String
   enrollment_date DateTime
-  student Students @relation(fields: [student_id], references: [student_id])
+  status Boolean @default(true)
 
+  Students Students @relation(name: "StudentSubjectsTostudent", fields: [student_id], references: [student_id], onDelete: NoAction, onUpdate: Cascade)
+  Subjects Subjects @relation(name: "StudentSubjectsTosubject", fields: [subject_id], references: [subject_id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([student_id, subject_id])
 }
 
-model TeacherCommission {
-  teacher_commission_id Int @id @default(autoincrement())
-  teacher_id Int
-  subject_id Int
-  commission_amount Decimal? @db.Decimal(5, 2)
-  commission_type String? 
-  Teacher Teachers @relation(fields: [teacher_id], references: [teacher_id])
+model TeacherSubjects {
+  teacher_id     String
+  subject_id     String
+  assigned_date  DateTime
+  status         Boolean @default(true)
+
+  Teachers        Teachers @relation(name: "teachersubjectsToteacher", fields: [teacher_id], references: [teacher_id], onDelete: NoAction, onUpdate: Cascade)
+  Subjects        Subjects @relation(name: "teachersubjectsTosubject", fields: [subject_id], references: [subject_id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([teacher_id, subject_id])
 }
 
-model Payment {
-  payment_id Int @id @default(autoincrement())
-  student_id Int
-  amount Decimal? @db.Decimal(10, 2)
-  due_amount Decimal? @db.Decimal(10, 2)
-  balance Decimal? @db.Decimal(10, 2)
-  payment_date DateTime
-  paid Boolean
-  Student Students @relation(fields: [student_id], references: [student_id])
+
+model StudentPayments {
+  payment_id     String      @id @default(cuid())
+  student_id     String
+  subject_id     String
+  payment_date   DateTime
+  amount         Decimal      @db.Decimal(5, 2)
+  month_id       String
+
+  Students        Students @relation(name: "studentpaymentsTostudent", fields: [student_id], references: [student_id], onDelete: NoAction, onUpdate: Cascade)
+  Subjects        Subjects @relation(name: "studentpaymentsTosubject", fields: [subject_id], references: [subject_id], onDelete: NoAction, onUpdate: NoAction)
+  Months          Months   @relation(name: "studentpaymentsTomonth", fields: [month_id], references: [month_id], onDelete: NoAction, onUpdate: NoAction)
 }
 
-model Attendance {
-  attendance_id Int @id @default(autoincrement())
-  student_id Int
-  subject_id Int
-  attendance_date DateTime
-  attendance_status String? @db.VarChar(10)
-  Student Students @relation(fields: [student_id], references: [student_id])
+model TeacherPayments {
+  payment_id     String      @id @default(cuid())
+  teacher_id     String
+  subject_id     String
+  payment_date   DateTime
+  amount         Decimal
+  month_id       String
+
+  Teachers        Teachers @relation(name: "teacherpaymentsToteacher", fields: [teacher_id], references: [teacher_id], onDelete: NoAction, onUpdate: Cascade)
+  Subjects        Subjects @relation(name: "teacherpaymentsTosubject", fields: [subject_id], references: [subject_id], onDelete: NoAction, onUpdate: NoAction)
+  Months          Months   @relation(name: "teacherpaymentsTomonth", fields: [month_id], references: [month_id], onDelete: NoAction, onUpdate: NoAction)
 }
 
-enum UserSex {
-  MALE
-  FEMALE
+model Months {
+  month_id       String    @id
+  StudentPayments StudentPayments[] @relation(name: "studentpaymentsTomonth")
+  TeacherPayments TeacherPayments[] @relation(name: "teacherpaymentsTomonth")
 }
+
+

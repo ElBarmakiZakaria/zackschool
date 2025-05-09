@@ -13,10 +13,9 @@ const AdminPage = () => {
         <div className="w-full lg:w-2/3 flex flex-col gap-8">
           {/* USER CARD */}
           <div className="flex gap-4 justify-between flex-wrap">
-            <UserCard type="admin"/>
             <UserCard type="student"/>
             <UserCard type="teacher"/>
-            <UserCard type="parent"/>
+            <UserCard type="subject"/>
           </div>
           {/* MIDDLECHART */}
           <div className="flex gap-4 flex-col lg:flex-row">
@@ -25,9 +24,7 @@ const AdminPage = () => {
               <CountChart />
             </div>
             {/* ATTENDANCE CHART */}
-            <div className="w-full lg:w-2/3 h-[450px]">
-              <AttendanceChart />
-            </div>
+            
           </div>
           {/* BOTTOMCHART */}
           <div className="">
@@ -36,8 +33,8 @@ const AdminPage = () => {
         </div>
         {/* RIGHT */}
         <div className="w-full lg:w-1/3 flex flex-col gap-8">
-          <EventCalendar />
-          <Announcements />
+          {/* <EventCalendar />
+          <Announcements /> */}
         </div>
       </div>
       

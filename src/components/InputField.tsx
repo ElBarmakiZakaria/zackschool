@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import { FieldError } from "react-hook-form";
 
 type InputFieldProps = {
@@ -19,6 +20,7 @@ const InputField = ({
   error,
   inputProps,
 }: InputFieldProps) => {
+
   return (
     <div className="flex flex-col gap-2 w-full md:w-1/4">
       <label className="text-xs text-gray-500">{label}</label>

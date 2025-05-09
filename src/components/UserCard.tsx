@@ -1,14 +1,13 @@
 import prisma from "@/lib/prisma"
 import Image from "next/image"
 
-const UserCard = async ({ type }:{ type: "admin" | "teacher" | "student" | "parent"}) => {
+const UserCard = async ({ type }:{ type: "teacher" | "student" | "subject"}) => {
 
 
   const modelMap = {
-    admin: prisma.admin,
     teacher: prisma.teachers,
     student: prisma.students,
-    parent: prisma.parents,
+    subject: prisma.subjects,
   };
 
 

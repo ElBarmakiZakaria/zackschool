@@ -6,11 +6,16 @@ import TableSearch from "@/components/TableSearch";
 import { currentUser } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
-import { Prisma, StudentSubject, Subjects, Teachers } from "@prisma/client";
+import { Prisma, Subjects, StudentSubjects, TeacherSubjects, Teachers } from "@prisma/client";
 import Image from "next/image";
 
-type SubjectList = Subjects & {Teacher:Teachers}
 
+type SubjectList = Subjects & {
+  StudentSubjects: StudentSubjects[];
+  TeacherSubjects: (TeacherSubjects & {
+    Teachers: Teachers;
+  })[];
+};
 
 
 const columns = [
@@ -19,8 +24,17 @@ const columns = [
     accessor: "name",
   },
   {
+    header: "Grade",
+    accessor: "grade",
+  },
+  {
     header: "Price",
     accessor: "price",
+    className: "hidden md:table-cell",
+  },
+  {
+    header: "Teacher Portion",
+    accessor: "teacher portion",
     className: "hidden md:table-cell",
   },
   {
@@ -40,24 +54,29 @@ const columns = [
 ];
 
 
-const renderRow = (item: SubjectList, role: string) => (
+const renderRow = (item: SubjectList) => (
   <tr
     key={item.subject_id}
     className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight"
   >
     <td className="flex items-center gap-4 p-4">{item.subject_name}</td>
-    <td className="hidden md:table-cell">{item.price?.toString()} MAD</td>
-    <td className="hidden md:table-cell">{item.Teacher.first_name} {item.Teacher.surname}</td>
-    {/* <td className="hidden md:table-cell">{item.StudentSubject?.length || 0}</td> */}
-    <td className="hidden md:table-cell">0</td>
+    <td className="hidden md:table-cell">{item.grade_id}</td>
+    <td className="hidden md:table-cell">{Number(item.price).toFixed(2)} MAD</td>
+    <td className="hidden md:table-cell">{Number(item.teacher_portion).toFixed(2)} MAD</td>
+
+    <td className="hidden md:table-cell">
+    {item.TeacherSubjects?.length
+    ? item.TeacherSubjects
+        .map((ts) => `${ts.Teachers.first_name} ${ts.Teachers.surname}`)
+    : "---"}
+    </td>
+
+    <td className="hidden md:table-cell">{(item.StudentSubjects?.length ?? 0).toLocaleString()}</td>
+    
     <td>
       <div className="flex items-center gap-2">
-        {role === "admin" && (
-          <>
-            <FormModal table="subject" type="update" data={item} />
-            <FormModal table="subject" type="delete" id={item.subject_id} />
-          </>
-        )}
+          <FormModal table="subject" type="update" id={item.subject_id} />
+          <FormModal table="subject" type="delete" id={item.subject_id} />
       </div>
     </td>
   </tr>
@@ -71,9 +90,8 @@ const SubjectListPage = async ({
 }) => {
   
   const user = await currentUser();
-  const role = user?.publicMetadata.role as string;
+  const role = user?.publicMetadata.role as string; // extracting role of users
 
-  console.log(role);
 
   const { page, ...queryParams } = searchParams;
   
@@ -88,17 +106,21 @@ const SubjectListPage = async ({
             if (value !== undefined) {
               switch(Key){
                 case "teacherId":
-                  query.teacher_id = parseInt(queryParams.teacherId!)
+                  query.TeacherSubjects = {
+                    some : {
+                      teacher_id: queryParams.teacherId!
+                    }
+                  }
                 break;
-                // case "studentId":
-                //   query.StudentSubject = {
-                //     some: {
-                //       student_id: parseInt(queryParams.studentId!)
-                //     }
-                //   }
-                // break;
-  
-                
+
+                case "studentId":
+                  query.StudentSubjects = {
+                    some: {
+                      student_id: queryParams.studentId!
+                    }
+                  }
+                break;
+
                 case "search":
                   query.subject_name = {contains:value, mode:"insensitive"}
                 break;
@@ -112,8 +134,12 @@ const SubjectListPage = async ({
     prisma.subjects.findMany({
       where: query,
       include: {
-        Teacher: true,
-        
+        StudentSubjects : true,
+        TeacherSubjects : {
+          include : {
+            Teachers : true
+          }
+        }
       },
       take: ITEM_PER_PAGE,
       skip: ITEM_PER_PAGE * ( p - 1 ),
@@ -130,19 +156,25 @@ const SubjectListPage = async ({
         <h1 className="hidden md:block text-lg font-semibold">All Subjects</h1>
         <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
           <TableSearch />
+
           <div className="flex items-center gap-4 self-end">
+
             <button className="w-8 h-8 flex items-center justify-center rounded-full bg-lamaYellow">
               <Image src="/filter.png" alt="" width={14} height={14} />
             </button>
+
             <button className="w-8 h-8 flex items-center justify-center rounded-full bg-lamaYellow">
               <Image src="/sort.png" alt="" width={14} height={14} />
             </button>
-            {role === "admin" && <FormModal table="subject" type="create" />}
+
+            <FormModal table="subject" type="create" />
           </div>
         </div>
       </div>
+
       {/* LIST */}
-      <Table columns={columns} renderRow={(item) => renderRow(item, role)} data={data} />
+      <Table columns={columns} renderRow={(item) => renderRow(item)} data={data} />
+
       {/* PAGINATION */}
       <Pagination page={p} count={count}/>
     </div>
