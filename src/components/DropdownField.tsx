@@ -15,6 +15,8 @@ type DropdownFieldProps = {
   table: string;
   displayField: string;
   defaultValue?: string;
+  gradeValue?: string;
+  displayValue: string;
   error?: FieldError;
   selectProps?: React.SelectHTMLAttributes<HTMLSelectElement>;
 }
@@ -26,6 +28,8 @@ const DropdownField = ({
   table,
   defaultValue,
   displayField,
+  gradeValue,
+  displayValue,
   error,
   selectProps,
 }: DropdownFieldProps) => {
@@ -53,15 +57,16 @@ const DropdownField = ({
         className="border p-2 rounded-md w-full"
         {...selectProps}
       >
-        <option value="">{defaultValue ? defaultValue : `select ${name}`}</option>
-        {selecteddata
-        .filter(item => item[displayField] !== defaultValue)
-        .map((item, index) => (
-          <option key={index} value={item[displayField]}>
-            {item[displayField]}
+        <option value="">Select {label}</option>
+        {selecteddata.map((item, index) => (
+          <option 
+            key={index} 
+            value={item[displayValue]}
+            selected={item[displayValue] === defaultValue}
+          >
+            {gradeValue ? item[displayField] + ", " + item[gradeValue] : item[displayField]}
           </option>
         ))}
-
       </select>
       {error?.message && (
         <p className="text-xs text-red-500">{error.message}</p>

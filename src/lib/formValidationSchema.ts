@@ -72,4 +72,28 @@ export const teacherSchema = z.object({
 
 export type TeacherSchema = z.infer<typeof teacherSchema>;
 
+// Create a schema for student subject linking/updating
+export const studentSubjectSchema = z.object({
+  student_id: z.string().min(1, { message: "Student ID is required" }),
+  subject_id: z.string().min(1, { message: "Subject is required" }),
+  //subject_name: z.string().min(1, { message: "Subject name is required" }).optional(),
+  enrolment_date: z
+  .date({ message: "Enrolment date is required!" }),
+  status: z.boolean()
+});
 
+export type StudentSubjectSchema = z.infer<typeof studentSubjectSchema>;
+
+// Create a schema for student payment
+export const studentPaymentSchema = z.object({
+    payment_id: z.string().optional(),
+    student_id: z.string().min(1, { message: "Student ID is required" }),
+    subject_id: z.string().min(1, { message: "Subject is required" }),
+    payment_date: z.date({ message: "Payment date is required!" }),
+    amount: z
+    .string()
+    .regex(/^\d+(\.\d{1,2})?$/, { message: "Amount must be a valid decimal number." }),
+    month_id: z.string().min(1, { message: "Month is required" }),
+});
+
+export type StudentPaymentSchema = z.infer<typeof studentPaymentSchema>;

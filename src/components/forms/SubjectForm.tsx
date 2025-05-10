@@ -181,6 +181,7 @@ const SubjectForm = ({
                 table="grades"
                 defaultValue={subjectData?.grade_id}
                 displayField="grade_id"
+                displayValue="grade_id"
                 register={register}
                 error={errors?.grade_id}
               />

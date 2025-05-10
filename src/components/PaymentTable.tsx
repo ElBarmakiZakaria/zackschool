@@ -1,115 +1,107 @@
-import FormModal from "@/components/FormModal"
-import Pagination from "@/components/Pagination"
-import Table from "@/components/Table"
-import TableSearch from "@/components/TableSearch"
-import { role, paymentData } from "@/lib/data"
-import { Edit } from "lucide-react"
-import Image from "next/image"
-import Link from "next/link"
+"use client"
 
-type PaymentTable = {
-  id:number;
-  studentId:string;
-  paymentDate:string;
-  month:string;
-  amountPaid:string;
-  dueAmount:string;
-  status:string;
-}
+import Table from "./Table"
+import { Edit, PlusCircle } from "lucide-react";
+import { selectPaymentsForStudent } from "@/lib/action";
+import { useEffect, useState } from "react";
+import FormModal from "./FormModal";
+import { useRouter } from "next/navigation";
+
+// type Payment = {
+//     payment_id: string;
+//     student_id: string;
+//     subject_id: string;
+//     month_id: string;
+//     payment_date: Date;
+//     amount: Decimal;
+//     subject_name: string;
+//     Subjects: {
+//         subject_id: string;
+//         subject_name: string;
+//     };
+// };
 
 const columns = [
     {
-        header: "Payment Id",
-        accessor: "paymentId",
-        className: "border border-gray-100 p-2 bg-slate-100",
+      header: "Subject Name",
+      accessor: "subject_name",
+      className: "border border-gray-100 p-2", 
     },
-  {
-    header: "Student",
-    accessor: "studentId",
-    className: "border border-gray-100 p-2 bg-slate-100",
-  },
-  {
-    header: "Payment Date",
-    accessor: "paymentDate",
-    className: "border border-gray-100 p-2 bg-slate-100",
-  },
-  {
-    header: "Month",
-    accessor: "month",
-    className: "border border-gray-100 p-2 bg-slate-100",
-  },
-  {
-    header: "Amount Paid",
-    accessor: "amount",
-    className: "border border-gray-100 p-2 bg-slate-100",
-  },
-  {
-    header: "Due Amount",
-    accessor: "dueAmount",
-    className: "border border-gray-100 p-2 bg-slate-100",
-  },
-  {
-    header: "Status",
-    accessor: "status",
-    className: "border border-gray-100 p-2 bg-slate-100",
-  },
-
+    {
+      header: "Payment Date",
+      accessor: "payment_date",
+      className: "border border-gray-100 p-2",
+    },
+    {
+      header: "Amount",
+      accessor: "amount",
+      className: "border border-gray-100 p-2",
+    },
+    {
+      header: "Month",
+      accessor: "month_id",
+      className: "border border-gray-100 p-2",
+    },
+    {
+      header: "Actions",
+      accessor: "actions",
+      className: "border border-gray-100 p-2",
+    },
 ];
 
-
-
-const PaymentTable = ({name}:{
-    name: string;
+const PaymentTable = ({
+    id,
+}:{
+    id: string
 }) => {
+    const [payments, setPayments] = useState<any[]>([]);
+    const router = useRouter();
 
-    const renderRow = (item:PaymentTable) => (
-        <tr key={item.id}  className="border border-gray-100 even:bg-slate-100 text-sm hover:bg-lamaPurpleLight">
-            <td className="border border-gray-100 p-2">
-                {item.id}
-            </td>
-            <td className="border border-gray-100 p-2">
-                {/* <h3 className="font-semibold text-sm">{name}</h3> */}
-                <h3 className="font-semibold text-sm">{item.studentId}</h3>
-            </td>
-            <td className="border border-gray-100 p-2">
-                {item.paymentDate}
-            </td>
-            <td className="border border-gray-100 p-2">{item.month}</td>
-            <td className="border border-gray-100 p-2">{item.amountPaid}</td>
-            <td className="border border-gray-100 p-2">{item.dueAmount}</td>
-            <td className="border border-gray-100 p-2">{item.status}</td>
-           
+    const fetchPayments = async () => {
+        const studentPayments = await selectPaymentsForStudent(id);
+        if (studentPayments) {
+            setPayments(studentPayments.map(payment => ({
+                ...payment,
+                amount: payment.amount.toString() + ' MAD',
+                payment_date: payment.payment_date ? new Date(payment.payment_date).toLocaleDateString() : 'N/A',
+            })));
+        }
+    };
+
+    useEffect(() => {
+        fetchPayments();
+    }, [id]);
+
+    // Add a refresh function that can be called from child components
+    const refreshData = () => {
+        fetchPayments();
+        router.refresh();
+    };
+
+    return (
+        <div>
+            <div className="flex flex-row justify-between mb-4">
+                <div>Student Payments</div>
+                <FormModal table="paymentList" type="create" studentId={id} refreshData={refreshData}/>
+            </div>
             
-        </tr>
-    );
-
-
-
-
-  return (
-    <div>
-        <div className="flex flex-row justify-between">
-        <div>student {name} payment table</div>
-        <Edit />
+            <Table 
+                columns={columns} 
+                data={payments} 
+                renderRow={(item) => (
+                    <tr key={item.payment_id} className="border border-gray-100 even:bg-slate-100 text-sm hover:bg-lamaPurpleLight">
+                        <td className="border border-gray-100 p-2">{item.subject_name}</td>
+                        <td className="border border-gray-100 p-2">{item.payment_date}</td>
+                        <td className="border border-gray-100 p-2">{item.amount.toString()}</td>
+                        <td className="border border-gray-100 p-2">{item.month_id}</td>
+                        <td className="border border-gray-100 p-2">
+                            <FormModal table="paymentList" type="update" studentId={id} id={item.payment_id} refreshData={refreshData}/>
+                        </td>
+                    </tr>
+                )}
+            />
         </div>
-        <Table columns={columns} renderRow={renderRow} data={paymentData}/>
+    );
+};
 
-    </div>
-
-    // <table className="w-full mt-4 border-collapse border border-slate-500">
-    //     <thead>
-    //         <tr className="text-left text-gray-500 text-sm border p-2">
-    //             {columns.map((col)=>(
-    //                 <th key={col.accessor}  className="border border-gray-100 p-2" >{col.header}</th>
-    //             ))}
-    //         </tr>
-    //     </thead>
-    //     <tbody>
-    //         {paymentData.map((item)=>renderRow(item))}
-    //     </tbody>
-
-    // </table>
-  )
-}
-
-export default PaymentTable
+export default PaymentTable;

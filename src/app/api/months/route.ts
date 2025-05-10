@@ -1,20 +1,18 @@
-// src/app/api/subjects/route.ts
+// src/app/api/months/route.ts
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
 export async function GET() {
   try {
-    const subjects = await prisma.subjects.findMany({
+    const months = await prisma.months.findMany({
       select: {
-        subject_id: true,
-        subject_name: true,
-        grade_id: true,
+        month_id: true,
       },
     });
 
-    return NextResponse.json(subjects);
+    return NextResponse.json(months);
   } catch (err) {
-    console.error("Failed to fetch subjects", err);
+    console.error("Failed to fetch months", err);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
