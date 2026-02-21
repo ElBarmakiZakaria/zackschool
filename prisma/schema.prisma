@@ -56,7 +56,6 @@ model Students {
   StudentPayments StudentPayments[] @relation(name: "studentpaymentsTostudent")
 }
 
-
 model Teachers {
   teacher_id String @id @default(cuid())
   username String @unique 
@@ -70,7 +69,6 @@ model Teachers {
   TeacherSubjects TeacherSubjects[] @relation(name: "teachersubjectsToteacher")
   TeacherPayments TeacherPayments[] @relation(name: "teacherpaymentsToteacher")
 }
-
 
 model StudentSubjects {
   subject_id String
@@ -95,7 +93,6 @@ model TeacherSubjects {
 
   @@id([teacher_id, subject_id])
 }
-
 
 model StudentPayments {
   payment_id     String      @id @default(cuid())
@@ -128,5 +125,3 @@ model Months {
   StudentPayments StudentPayments[] @relation(name: "studentpaymentsTomonth")
   TeacherPayments TeacherPayments[] @relation(name: "teacherpaymentsTomonth")
 }
-
-

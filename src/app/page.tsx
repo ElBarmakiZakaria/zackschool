@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 
-
 const Page = () => {
 
   const { isLoaded, isSignedIn, user } = useUser();
@@ -42,7 +41,6 @@ const Page = () => {
       </div>
     );
   }
-
 
   return (
     <Homepage />

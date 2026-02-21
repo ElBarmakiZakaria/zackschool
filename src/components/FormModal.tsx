@@ -27,9 +27,15 @@ const SubjectListForm = dynamic(()=>import("./forms/SubjectListForm"),{
 const PaymentListForm = dynamic(()=>import("./forms/PaymentListForm"),{
     loading: () => <h1>Loading...</h1>,
 });
+const SubjectListTeacherForm = dynamic(()=>import("./forms/SubjectListTeacherForm"),{
+    loading: () => <h1>Loading...</h1>,
+});
+// const PaymentListTeacherForm = dynamic(()=>import("./forms/PaymentListTeacherForm"),{
+//     loading: () => <h1>Loading...</h1>,
+// });
 
 const forms:{
-    [key:string]:(setOpen:Dispatch<SetStateAction<boolean>>,  type:"create" | "update" | "delete", data?:any, id?:string ) => JSX.Element;
+    [key:string]:(setOpen:Dispatch<SetStateAction<boolean>>,  type:"create" | "update" | "delete", data?:any, id?:string, studentId?:string, teacherId?:string ) => JSX.Element;
 } = {
     teacher: (setOpen, type, id) => <TeacherForm type={type} id={id} setOpen={setOpen}/>,
     student: (setOpen, type, id) => <StudentForm type={type} id={id} setOpen={setOpen}/>,
@@ -37,25 +43,27 @@ const forms:{
     grade: (setOpen, type, data) => <GradeForm type={type} data={data} setOpen={setOpen}/>,
     subjectList: (setOpen, type, id, studentId) => <SubjectListForm type={type} id={id} studentId={studentId} handleClose={setOpen}/>,
     paymentList: (setOpen, type, id, studentId) => <PaymentListForm type={type} id={id} studentId={studentId} handleClose={setOpen}/>,
+    subjectListTeacher: (setOpen, type, id, teacherId) => <SubjectListTeacherForm type={type} id={id} teacherId={teacherId} handleClose={setOpen} />
 }
 
-
-type FormModalProps = {
+type FormModalProps = { 
   table:
   | "teacher"
   | "student"
   | "subject"
   | "grade"
   | "subjectList"
-  | "paymentList";
+  | "paymentList"
+  | "subjectListTeacher";
   type: "create" | "update" | "delete";
   id?: string;
   studentId?: string;
+  teacherId?: string;
   refreshData?: () => void;
   data?: any;
 };
 
-const FormModal = ({ table, type, id, studentId, refreshData, data }: FormModalProps) => {
+const FormModal = ({ table, type, id, studentId, teacherId, refreshData, data }: FormModalProps) => {
 
     const size = type === "create" ? "w-8 h-8" : "w-7 h-7";
     
@@ -78,7 +86,7 @@ const FormModal = ({ table, type, id, studentId, refreshData, data }: FormModalP
     const Form = () => {
 
         return type === "create" || type === "update" || type === "delete" ?(
-            forms[table](handleClose, type, id, studentId)
+            forms[table](handleClose, type, id, studentId, teacherId)
         ): (
             "Form not found!"
         )

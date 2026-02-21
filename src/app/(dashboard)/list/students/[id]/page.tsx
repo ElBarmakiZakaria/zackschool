@@ -1,6 +1,4 @@
-import Announcements from "@/components/Announcements"
-import Performance from "@/components/Performance"
-import BigCalender from "@/components/BigCalender"
+
 import Image from "next/image"
 import Link from "next/link"
 import { role } from "@/lib/data"

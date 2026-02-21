@@ -1,10 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { GradeSchema, gradeSchema, StudentPaymentSchema, StudentSchema, StudentSubjectSchema, SubjectSchema, TeacherSchema } from "./formValidationSchema";
+import { GradeSchema, gradeSchema, StudentPaymentSchema, StudentSchema, StudentSubjectSchema, SubjectSchema, TeacherSchema, TeacherSubjectSchema } from "./formValidationSchema";
 import prisma from "./prisma";
-import { string } from "zod";
-import { Erica_One } from "next/font/google";
 
 type CurrentState = {success: boolean; error: boolean};
 
@@ -548,5 +546,109 @@ export const updateStudentPayment = async (
   } catch (error) {
     console.error("Error updating student payment:", error);
     return { success: false, error: true };
+  }
+};
+
+
+export const selectTeacherForPage = async (
+  id: string,
+)=> {
+  try {
+    const teacherData = await prisma.teachers.findUnique({
+      where:{
+        teacher_id: id,
+      },
+      include: {
+        TeacherSubjects: true,
+        
+      }
+    })
+
+    return teacherData
+
+  } catch (error) {
+    console.error(error);
+    return null; // Don't return error arrays
+  }
+};
+
+
+export const createTeacherSubject = async (
+  data: TeacherSubjectSchema
+) => {
+  try {
+    await prisma.teacherSubjects.create({
+      data: {
+        teacher_id: data.teacher_id,
+        subject_id: data.subject_id,
+        assigned_date: data.assigned_date,
+        status: data.status, // default to true if not provided
+      },
+    });
+
+    revalidatePath(`/list/teachers/${data.teacher_id}`);
+    return { success: true, error: false };
+  } catch (error) {
+    console.error("Error creating student subject:", error);
+    return { success: false, error: true };
+  }
+};
+
+
+
+export const updateTeacherSubject = async (
+data: TeacherSubjectSchema
+) => {
+  try {
+    await prisma.teacherSubjects.update({
+      where: {
+        teacher_id_subject_id: {
+          teacher_id: data.teacher_id,
+          subject_id: data.subject_id,
+        },
+      },
+      data: {
+        status: data.status,
+      },
+    });     
+
+    revalidatePath(`/list/teachers/${data.teacher_id}`);
+    return { success: true, error: false };
+  } catch (error) {
+    console.error("Error updating student subject:", error);
+    return { success: false, error: true };
+  }
+};
+
+export const selectSubjectsForteacher = async (
+  id: string,
+) => {
+  try {
+    const teacherSubjects = await prisma.teacherSubjects.findMany({
+      where: {
+        teacher_id: id,
+      },
+      include: {
+        Subjects: true,
+      },
+      orderBy: {
+        assigned_date: 'desc'
+      }
+    });
+
+    // Transform the data to match the exact requirements
+    const formattedSubjects = teacherSubjects.map(subject => ({
+      teacher_id: subject.teacher_id,
+      subject_id: subject.Subjects.subject_id,
+      subject_name: subject.Subjects.subject_name,
+      assigned_date: subject.assigned_date,
+      status: subject.status
+    }));
+
+    return formattedSubjects;
+
+  } catch (error) {
+    console.error('Error retrieving student subjects:', error);
+    return null;
   }
 };

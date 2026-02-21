@@ -1,14 +1,66 @@
-import Announcements from "@/components/Announcements"
-import Performance from "@/components/Performance"
-import BigCalender from "@/components/BigCalender"
+"use client"
+
 import Image from "next/image"
 import Link from "next/link"
 import FormModal from "@/components/FormModal"
-import { role } from "@/lib/data"
-import { Calendar1, Mail, Mailbox, Phone, User } from "lucide-react"
-import Calendar from "react-calendar"
+import { Mail, Phone, Presentation, School, User, Wallet, Wallet2Icon } from "lucide-react"
+import { useState, useEffect } from "react"
+import SubjectsListTeacher from "@/components/SubjectListTeacher"
 
-const SingleTeacherPage = () => {
+
+interface TeacherData {
+  teacher: {
+    teacher_id: string;
+    username: string;
+    email: string;
+    first_name: string;
+    surname: string;
+    phone_number: string;
+    profile_img: string | null;
+    status: boolean;
+  };
+  stats: {
+    subjectCount: number;
+    gradeCount: number;
+    totalStudentCount: number;
+    totalTeacherPortion: number;
+    balanceForCurrentMonth: number;
+  };
+  subjects: any[];
+  payments: any[];
+}
+
+const SingleTeacherPage = ({params}: {params: {id: string}}) => {
+
+    const [teacherData, setTeacherData] = useState<TeacherData | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    
+    useEffect(() => {
+        if (!params.id) return;
+
+        const fetchTeacherData = async () => {
+        try {
+            const res = await fetch(`/api/teachers/${params.id}`);
+            if (!res.ok) throw new Error("Failed to fetch teacher data");
+            const data = await res.json();
+            setTeacherData(data);
+        } catch (err: any) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+        };
+
+        fetchTeacherData();
+    }, [params.id]);
+
+    if (loading) return <p className="p-4">Loading...</p>;
+    if (error) return <p className="p-4 text-red-500">Error: {error}</p>;
+    if (!teacherData) return <p className="p-4">No data found</p>;
+
+    const { teacher, stats, subjects } = teacherData;
+
   return (
     <div className="flex-1 p-4 flex flex-col gap-4">
         <div className="flex flex-col md:flex-row gap-4">
@@ -22,50 +74,33 @@ const SingleTeacherPage = () => {
                 <div className="flex flex-row justify-between gap-4 items-center">
                     
                     <div className="flex flex-row gap-3 justify-center">
-                    <Image src="/avatar.png" alt="" width={64} height={64} className="w-16 h-16 rounded-full object-cover" />
+                    <Image src={teacher.profile_img || "/avatar.png"} alt="Teacher" width={64} height={64} className="w-16 h-16 rounded-full object-cover" />
                     
                     <div className="flex flex-col">
-                        <h1 className="text-xl font-semibold">Cameron Moran</h1>
-                        <span className="text-gray-400 text-sm">Active</span>
+                        <h1 className="text-xl font-semibold">{teacher.first_name} {teacher.surname}</h1>
+                        <span className="text-gray-400 text-sm">{teacher.status ? "Active" : "Inactive"}</span>
                     </div>
                     </div>
 
 
-                    {role === "admin" && <FormModal
-                    table="teacher"
-                    type="update"
-                    data={{
-                        id: 1,
-                        username: "deanguerrero",
-                        email: "deanguerrero@gmail.com",
-                        password: "password",
-                        firstName: "Dean",
-                        lastName: "Guerrero",
-                        phone: "+1 234 567 89",
-                        address: "1234 Main St, Anytown, USA",
-                        bloodType: "A+",
-                        dateOfBirth: "2000-01-01",
-                        sex: "male",
-                        img: "https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=1200",
-                    }}
-                    />}
+                    <FormModal table="teacher" type="update" id={teacher.teacher_id}/>
                         
                 </div>
 
                 <div className="flex items-center justify-between gap-2 flex-wrap text-xs font-medium">
-                        
+
                         <div className="flex items-center gap-2">
-                            <Calendar1 width={14} height={14}/>
-                            <span>january 2025</span>
+                            <User width={14} height={14}/>
+                            <span>{teacher.username}</span>
                         </div>
                         <div className="flex items-center gap-2">
                             <Mail width={14} height={14}/>
-                            <span>user@gmail.com</span>
+                            <span>{teacher.email}</span>
                         </div>
 
                         <div className="flex items-center gap-2">
                             <Phone width={14} height={14}/>
-                            <span>+212 624545654</span>
+                            <span>{teacher.phone_number}</span>
                         </div>
                         
                     </div>
@@ -73,32 +108,44 @@ const SingleTeacherPage = () => {
 
             {/* SMALL CARDS */}
             <div className="flex-1 flex gap-4 justify-between flex-wrap">
+                {/* CARD */}
                 <div className="bg-white p-4 rounded-md flex gap-4 w-full md:w-[48%] xl:w-[45%] 2xl:w-[46%]">
-                    <Image src='/singleAttendance.png' alt="" width={24} height={24} className="w-6 h-6" />
+                <div className="w-8 h-8 flex items-center justify-center rounded-full bg-sky-300">
+                    <Wallet2Icon width={20} height={20} color="white"/>
+                </div>
                     <div className="">
-                        <h1 className="text-xl font-semibold">90%</h1>
-                        <span className="text-sm text-gray-400">Attendance</span>
+                        <h1 className="text-xl font-semibold">{stats.balanceForCurrentMonth} MAD</h1>
+                        <span className="text-sm text-gray-400">Current Balance</span>
                     </div>
                 </div>
+                {/* CARD */}
                 <div className="bg-white p-4 rounded-md flex gap-4 w-full md:w-[48%] xl:w-[45%] 2xl:w-[46%]">
-                    <Image src='/singleBranch.png' alt="" width={24} height={24} className="w-6 h-6" />
+                    <div className="w-8 h-8 flex items-center justify-center rounded-full bg-sky-300">
+                        <Wallet width={20} height={20} color="white"/>
+                    </div>
                     <div className="">
-                        <h1 className="text-xl font-semibold">2</h1>
-                        <span className="text-sm text-gray-400">Branches</span>
+                        <h1 className="text-xl font-semibold">{stats.totalTeacherPortion} MAD</h1>
+                        <span className="text-sm text-gray-400">Total Earnings</span>
                     </div>
                 </div>
+                {/* CARD */}
                 <div className="bg-white p-4 rounded-md flex gap-4 w-full md:w-[48%] xl:w-[45%] 2xl:w-[46%]">
-                    <Image src='/singleLesson.png' alt="" width={24} height={24} className="w-6 h-6" />
+                    <div className="w-8 h-8 flex items-center justify-center rounded-full bg-sky-300">
+                    <Presentation width={20} height={20} color="white"/>
+                    </div>
                     <div className="">
-                        <h1 className="text-xl font-semibold">6</h1>
-                        <span className="text-sm text-gray-400">Lessons</span>
+                        <h1 className="text-xl font-semibold">{stats.subjectCount}</h1>
+                        <span className="text-sm text-gray-400">Subjects</span>
                     </div>
                 </div>
+                {/* CARD */}
                 <div className="bg-white p-4 rounded-md flex gap-4 w-full md:w-[48%] xl:w-[45%] 2xl:w-[46%]">
-                    <Image src='/singleClass.png' alt="" width={24} height={24} className="w-6 h-6" />
+                    <div className="w-8 h-8 flex items-center justify-center rounded-full bg-sky-300">
+                        <School width={20} height={20} color="white"/>
+                    </div>
                     <div className="">
-                        <h1 className="text-xl font-semibold">9</h1>
-                        <span className="text-sm text-gray-400">Classes</span>
+                        <h1 className="text-xl font-semibold">{stats.gradeCount}</h1>
+                        <span className="text-sm text-gray-400">Grades</span>
                     </div>
                 </div>
             </div>
@@ -110,8 +157,8 @@ const SingleTeacherPage = () => {
                     <h1 className="text-xl font-semibold">Shortcuts</h1>
                     <div className="mt-4 flex gap-4 flex-wrap text-xs text-gray-500">
                         
-                        <Link className="p-3 rounded-md bg-lamaSkyLight" href={`/list/students?teacherId=${2}`}>Teacher&apos;s Students</Link>
-                        <Link className="p-3 rounded-md bg-lamaSkyLight" href={`/list/subjects?teacherId=${1}`}>Teacher&apos;s Subjects</Link>
+                        <Link className="p-3 rounded-md bg-lamaSkyLight" href={`/list/students?teacherId=${teacher.teacher_id}`}>Teacher&apos;s Students</Link>
+                        <Link className="p-3 rounded-md bg-lamaSkyLight" href={`/list/subjects?teacherId=${teacher.teacher_id}`}>Teacher&apos;s Subjects</Link>
                     </div>
                 </div>
 
@@ -119,10 +166,19 @@ const SingleTeacherPage = () => {
 
         </div>
         {/* BOTTOM */}
-        <div className="mt-4 bg-white rounded-md p-4 h-[800px]">
-            <h1>Teacher&apos;s Schedule</h1>
-            <BigCalender />
+        <div className="flex flex-col gap-2 ">  
+        <div className="bg-white rounded-md p-8 pt-4">
+          {/* <SubjectsList id={studentData.student_id} /> */}
+          <SubjectsListTeacher dataTeacher={teacher} dataSubjects={subjects}/>
         </div>
+
+        <div className="mt-4 bg-white rounded-md p-4">
+          
+        {/* <PaymentTable id={studentData.student_id}/> */}
+        
+        </div>
+
+      </div>
         
     </div>
   )

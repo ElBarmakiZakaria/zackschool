@@ -11,7 +11,6 @@ import { StudentSubjectSchema, studentSubjectSchema } from "@/lib/formValidation
 import { useRouter } from "next/navigation";
 
 
-
 const SubjectListForm = ({
   handleClose,
   type,
@@ -49,6 +48,7 @@ const SubjectListForm = ({
       try {
         const subjects = await selectSubjectsForStudent(studentId!);
         const selectedSubject = subjects?.find((subject) => subject.subject_id === id);
+        console.log(selectedSubject)
         if (selectedSubject) {
           setValue("subject_id", selectedSubject.subject_id);
           setValue("student_id", studentId!);

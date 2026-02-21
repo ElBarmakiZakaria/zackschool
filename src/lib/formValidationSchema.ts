@@ -14,7 +14,6 @@ export const subjectSchema = z.object({
   
 export type SubjectSchema = z.infer<typeof subjectSchema>;
 
-
 export const gradeSchema = z.object({
     grade: z.string().min(5, { message: "Grade name is required!" }),
   });
@@ -97,3 +96,14 @@ export const studentPaymentSchema = z.object({
 });
 
 export type StudentPaymentSchema = z.infer<typeof studentPaymentSchema>;
+
+// Create a schema for student subject linking/updating
+export const teacherSubjectSchema = z.object({
+  teacher_id: z.string().min(1, { message: "teacher ID is required" }),
+  subject_id: z.string().min(1, { message: "Subject is required" }),
+  //subject_name: z.string().min(1, { message: "Subject name is required" }).optional(),
+  assigned_date: z.date({ message: "Enrolment date is required!" }),
+  status: z.boolean()
+});
+
+export type TeacherSubjectSchema = z.infer<typeof teacherSubjectSchema>;

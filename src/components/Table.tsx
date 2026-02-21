@@ -1,5 +1,3 @@
-
-
 const Table = ({
     columns,
     renderRow,
